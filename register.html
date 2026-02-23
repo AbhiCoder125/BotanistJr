@@ -1,0 +1,195 @@
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Page</title>
+</head>
+<body>
+    <h2>User Registration</h2>
+
+    <form action="/register" method="post">
+        <label>Name:</label><br>
+        <input type="text" name="name"><br><br>
+
+        <label>Email:</label><br>
+        <input type="email" name="email"><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password"><br><br>
+
+        <button type="submit">Register</button>
+    </form>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="class1">
+        <form action="/register" method="post">
+            <h1>Registration Form</h1>
+            <br>
+
+            <div>
+                <label>User name</label><br>
+                <input type="text" name="name" required placeholder="create username" class="input">
+            </div>
+
+            <div>
+                <label>Email</label><br>
+                <input type="email" name="email" required placeholder="create email" title="email must ends with gmail.com" class="input">
+            </div>
+
+            <div>
+                <label>Password</label><br>
+                <input type="password" name="password" required placeholder="create password" title="password must contain 8 letters" class="input">
+            </div>
+            <br>
+
+            <input type="submit" class="btn" value="Submit">
+        </form>
+    </div>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="class1">
+        <form id="registerForm">
+            <h1>Registration Form</h1>
+            <br>
+
+            <div>
+                <label>Username</label><br>
+                <input type="text" name="username" required placeholder="Enter username" class="input">
+            </div>
+
+            <div>
+                <label>Full Name</label><br>
+                <input type="text" name="full_name" required placeholder="Enter full name" class="input">
+            </div>
+
+            <div>
+                <label>Password</label><br>
+                <input type="password" name="password" required placeholder="Enter password" class="input">
+            </div>
+            <br>
+
+            <input type="submit" class="btn" value="Submit">
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById("registerForm");
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const username = formData.get("username");
+            const full_name = formData.get("full_name");
+            const password = formData.get("password");
+
+            const query = `
+                mutation {
+                    register(username: "${username}", full_name: "${full_name}", password: "${password}") {
+                        id
+                        username
+                        full_name
+                    }
+                }
+            `;
+
+            const response = await fetch("/graphql", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query })
+            });
+
+            const result = await response.json();
+            if (result.data && result.data.register) {
+                document.getElementById("message").innerText =
+                    "User registered: " + result.data.register.username + " (" + result.data.register.full_name + ")";
+                form.reset();
+            } else {
+                document.getElementById("message").innerText = "Error registering user";
+            }
+        });
+    </script>
+</body>
+</html>-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="class1">
+        <form id="registerForm">
+            <h1>Registration Form</h1>
+            <br>
+
+            <div>
+                <label>Username</label><br>
+                <input type="text" name="username" required placeholder="Enter username" class="input">
+            </div>
+
+            <div>
+                <label>Full Name</label><br>
+                <input type="text" name="fullName" required placeholder="Enter full name" class="input">
+            </div>
+
+            <div>
+                <label>Password</label><br>
+                <input type="password" name="password" required placeholder="Enter password" class="input">
+            </div>
+            <br>
+
+            <input type="submit" class="btn" value="Submit">
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById("registerForm");
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const username = formData.get("username");
+            const fullName = formData.get("fullName"); // camelCase for GraphQL
+            const password = formData.get("password");
+
+            const query = `
+                mutation {
+                    register(username: "${username}", fullName: "${fullName}", password: "${password}") {
+                        id
+                        username
+                        fullName
+                    }
+                }
+            `;
+
+            const response = await fetch("/graphql", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query })
+            });
+
+            const result = await response.json();
+            if (result.data && result.data.register) {
+                document.getElementById("message").innerText =
+                    "User registered: " + result.data.register.username + " (" + result.data.register.fullName + ")";
+                form.reset();
+            } else {
+                document.getElementById("message").innerText = "Error registering user";
+                console.log(result.errors || result);
+            }
+        });
+    </script>
+</body>
+</html>
